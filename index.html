@@ -1,22 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Intro SE331</title>
-    <!-- Import Styles -->
-    <link rel="stylesheet" href="./assets/styles.css" />
-    <!-- Import Vue.js -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <meta charset="UTF-8" />
+  <title>Intro SE331</title>
+  <!-- Import Styles -->
+  <link rel="stylesheet" href="./assets/styles.css" />
+  <!-- Import Vue.js -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
-
 <body>
-    <div id="app">
-        <h1>Product goes here</h1>
+  <div id="app">
+    <div class="nav-bar"></div>
+    <div class="cart">Cart({{ cart }})</div>
+    <div class="product-display">
+      <div class="product-container">
+        <div class="product-image">
+          <img :src="image" :class="{ 'out-of-stock-image': !inStock }" alt="">
+        </div>
+        <div class="product-info">
+          <h1><a :href="link">{{ title }}</a></h1>
+          <h2>{{ description }}</h2>
+          <p v-if="inventory > 10">In Stock</p>
+          <p v-else-if="inventory <= 10 && inventory > 0">Almost out of Stock</p>
+          <p v-else>Out of Stock</p>
+          <ul>
+            <li v-for="detail in details">{{ detail }}</li>
+          </ul>
+          <div v-for="(variant, index) in variants" :key="variant.id"
+            @mouseover="updateVariant(index)"
+            class="color-circle" :style="{ backgroundColor: variant.color }">
+          </div>
+          <button class="button" :disabled='!inStock' @click="addToCart" :class="{ disabledButton: !inStock }">Add to Cart</button>
+          <button class="button" @click="toggleStockStatus">Toggle Stock Status</button>
+          <ul class="single-line-list">
+            <li v-for="size in sizes">{{ size }}</li>
+          </ul>
+          <p>{{ saleMessage }}</p>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Import Js -->
-    <script src="./main.js"></script>
+  <!-- Import Js -->
+  <script src="./main.js"></script>
 </body>
-
 </html>
