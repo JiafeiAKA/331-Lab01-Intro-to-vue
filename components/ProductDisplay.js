@@ -1,6 +1,5 @@
 const productDisplay = {
-    template:/*html*/
-	`<div class="product-display">
+    template:`<div class="product-display">
     <div class="product-container">
         <div class="product-image">
             <!-- image goes here -->
@@ -18,22 +17,21 @@ const productDisplay = {
     <p v-if="sale">ON SALE@!</p>
     <p v-else>not on sale</p>
     <p>shipping: {{shipping}}</p>
-	<product-details :details="details"></product-details>
-    <ul>
-        <li v-for="detail in details">{{detail}}</li>
-    </ul>
+    <product-details :details="details"></product-details>
     <div v-for="(variant, index) in variants" :key="variant.id" @mouseover="updateVariant(index)" class="color-circle" :style="{backgroundColor: variant.color}">{{variant.color}}</div>
     <p><span v-for="size in sizes">{{size}} ,</span></p>
     <!-- shorten version -->
     <button class="button" :disabled='!inStock' @click="add_to_cart" :class="{disabledButton: !inStock}">Add to cart</button>
     <!-- New button to remove from cart -->
     <button class="button" @click="remove_from_cart">Remove Cart</button>
-	<!-- New button to inStock status -->
+    <!-- New button to inStock status -->
     <button class="button" @click="toggle_in_stock">Stock Status</button>
+    <review-lsit :reviews="reviews"></review-list>
+    <review-form @review-submitted="addReview"></review-form>
 </div>`,
     props: {
         premium: Boolean,
-		details: Array
+        details: Array
     },
     setup(props, { emit }) {
         // Attributes
@@ -51,7 +49,7 @@ const productDisplay = {
         const link = ref("https://www.camt.cmu.ac.th/");
         const sale = ref(false);
         const onSale = ref(true);
-        const details = ref(["50% cotton", "30% wool", "20% polyester"]);
+        const reviews = ref([])
         const variants = ref([
             { id: 2234, color: "green", image: "./assets/images/socks_green.jpg", quantity: 50, sale: true},
             { id: 2235, color: "blue", image: "./assets/images/socks_blue.jpg", quantity: 0, sale: false},
@@ -72,9 +70,10 @@ const productDisplay = {
         });
 
         function add_to_cart() {
-			emit('add-to-cart', variants.value[selectedVariant.value].id)
+            emit('add-to-cart', variants.value[selectedVariant.value].id)
         }
-		function remove_from_cart() {
+
+        function remove_from_cart() {
             emit('remove-from-cart', variants.value[selectedVariant.value].id);
         }
 
@@ -89,8 +88,11 @@ const productDisplay = {
         function updateVariant(index) {
             selectedVariant.value = index;
         }
+        function addReview(review){
+            reviews.value.push(review),
+            console.log(review)
+        }
 
-        // Return
         return { 
             title, 
             description, 
@@ -99,16 +101,17 @@ const productDisplay = {
             inStock, 
             inventory, 
             sale, 
-            details, 
             variants, 
             sizes, 
             add_to_cart, 
+            remove_from_cart,
             update_image, 
             toggle_in_stock, 
-            updateVariant, 
-			remove_from_cart,
+            updateVariant,
+            addReview, 
             onSale,
-            shipping
+            shipping,
+            reviews
         };
     },
 }
