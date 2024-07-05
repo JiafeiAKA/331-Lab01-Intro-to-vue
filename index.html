@@ -12,10 +12,7 @@
     <div id="app">
         <div class="nav-bar"></div>
         <div class="cart">Cart( {{cart}} )</div>
-        <product-display></product-display>
-    </div>
-
-    <!-- Import Js -->
+        <product-display :premium="premium" :details="details" @add-to-cart="updateCart"></product-display>    <!-- Import Js -->
     <script src="./components/ProductDisplay.js"></script>
     <script src="./main.js"></script>
 </body>

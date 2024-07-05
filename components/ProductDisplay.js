@@ -17,6 +17,7 @@ const productDisplay = {
     <p v-else>Out of Stock</p>
     <p v-if="sale">ON SALE@!</p>
     <p v-else>not on sale</p>
+    <p>shipping: {{shipping}}</p>
     <ul>
         <li v-for="detail in details">{{detail}}</li>
     </ul>
@@ -27,8 +28,19 @@ const productDisplay = {
     <!-- New button to inStock status -->
     <button class="button" @click="toggle_in_stock">Stock Status</button>
 </div>`,
-    setup() {
+    props: {
+        premium: Boolean,
+		details: Array
+    },
+    setup(props, { emit }) {
         // Attributes
+        const shipping = computed(() => {
+            if (props.premium){
+                return 'Free'
+            }else {
+                return 30
+            }
+        })
         const product = ref("Boots");
         const brand = ref("SE 331");
         const description = ref("Wears on both feet, keeps you warm");
@@ -57,7 +69,7 @@ const productDisplay = {
         });
 
         function add_to_cart() {
-            cart.value++;
+			emit('add-to-cart', variants.value[selectedVariant.value].id)
         }
 
         function update_image(variant_image) {
@@ -88,7 +100,8 @@ const productDisplay = {
             update_image, 
             toggle_in_stock, 
             updateVariant, 
-            onSale 
+            onSale,
+            shipping
         };
     },
 }
